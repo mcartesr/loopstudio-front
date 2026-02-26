@@ -1,0 +1,134 @@
+<div class="page-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#e91e63"/>
+            <path d="M2 17L12 22L22 17" stroke="#e91e63" stroke-width="2" fill="none"/>
+            <path d="M2 12L12 17L22 12" stroke="#e91e63" stroke-width="2" fill="none"/>
+          </svg>
+        </div>
+        <span class="logo-text">loopstudio</span>
+      </div>
+      <div class="challenge-text">Frontend Developer Challenge</div>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <!-- Voting Form Section -->
+    <section class="voting-section">
+      <h1 class="voting-title">Vote your Favourite Country</h1>
+      
+      <div class="form-container">
+        <form class="voting-form" (ngSubmit)="onSubmitVote()">
+          <div class="form-row">
+            <div class="input-container">
+              <input 
+                type="text" 
+                placeholder="Name"
+                [(ngModel)]="voteForm.name"
+                name="name"
+                class="form-input"
+                required>
+            </div>
+            
+            <div class="input-container">
+              <input 
+                type="email" 
+                placeholder="Email"
+                [(ngModel)]="voteForm.email"
+                name="email"
+                class="form-input"
+                [class.invalid]="isEmailInvalid()"
+                required>
+              <div class="error-text" *ngIf="isEmailInvalid()">
+                Invalid email
+              </div>
+            </div>
+            
+            <div class="input-container">
+              <select 
+                [(ngModel)]="voteForm.country"
+                name="country"
+                class="form-select"
+                required>
+                <option value="" disabled selected>Country</option>
+                <option *ngFor="let country of countries()" [value]="country.name">
+                  {{ country.name }}
+                </option>
+              </select>
+            </div>
+            
+            <button 
+              type="submit" 
+              class="submit-btn"
+              [disabled]="!isFormValid()"
+              [class.disabled]="!isFormValid()">
+              Submit Vote
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Error de validación de voto -->
+    <div *ngIf="voteError()" class="vote-error-container">
+      <p class="error-message">{{ voteError() }}</p>
+    </div>
+
+    <!-- Countries Table Section -->
+    <section class="countries-section">
+      <h2 class="section-title">Top 10 Most Voted Countries</h2>
+      
+      <!-- Search -->
+      <div class="search-container">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            placeholder="Search Country, Capital City, Region or Subregion"
+            (input)="onSearchChange($event)"
+            class="search-input">
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoading()" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Loading countries...</p>
+      </div>
+
+      <!-- Error de carga de países -->
+      <div *ngIf="error() && !voteError()" class="error-container">
+        <p class="error-message">{{ error() }}</p>
+        <button (click)="retryLoadCountries()" class="retry-btn">Retry</button>
+      </div>
+
+      <!-- Countries Table -->
+      <div *ngIf="!isLoading() && !error() && countries().length > 0" class="table-container">
+        <table class="countries-table">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th>Capital City</th>
+              <th>Region</th>
+              <th>Sub Region</th>
+              <th>Votes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let country of filteredCountries">
+              <td>{{ country.name }}</td>
+              <td>{{ country.capital }}</td>
+              <td>{{ country.region }}</td>
+              <td>{{ country.subregion }}</td>
+              <td>{{ country.votes }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>

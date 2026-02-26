@@ -1,0 +1,67 @@
+<div class="page-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#e91e63"/>
+            <path d="M2 17L12 22L22 17" stroke="#e91e63" stroke-width="2" fill="none"/>
+            <path d="M2 12L12 17L22 12" stroke="#e91e63" stroke-width="2" fill="none"/>
+          </svg>
+        </div>
+        <span class="logo-text">loopstudio</span>
+      </div>
+      <div class="challenge-text">Frontend Developer Challenge</div>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <div class="page-header">
+      <h1 class="page-title">📊 Registro de Votos</h1>
+      <p class="page-description">Lista completa de todos los votos registrados para países favoritos</p>
+    </div>
+
+    <div class="navigation-section">
+      <button class="btn-primary" (click)="navigateToHome()">🏠 Votar Ahora</button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading()" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Cargando votos...</p>
+    </div>
+
+    <!-- Votes Section -->
+    <div *ngIf="!isLoading()" class="votes-section">
+      <div class="votes-header">
+        <h2>Total de Votos: {{ votes().length }}</h2>
+      </div>
+
+      <div *ngIf="votes().length === 0" class="no-votes">
+        <div class="empty-state">
+          🗳️
+          <h3>No hay votos registrados</h3>
+          <p>¡Sé el primero en votar por tu país favorito!</p>
+          <button class="btn-primary" (click)="navigateToHome()">Realizar Primer Voto</button>
+        </div>
+      </div>
+
+      <div *ngIf="votes().length > 0" class="votes-grid">
+        <div class="vote-card" *ngFor="let vote of votes(); let i = index">
+          <div class="vote-number">#{{ i + 1 }}</div>
+          <div class="vote-content">
+            <div class="vote-header">
+              <h3>{{ vote.name }}</h3>
+              <span class="vote-country">🏳️ {{ vote.country }}</span>
+            </div>
+            <div class="vote-details">
+              <p class="vote-email">📧 {{ vote.email }}</p>
+              <p class="vote-date">🕐 {{ formatDate(vote.timestamp) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
